@@ -1,0 +1,107 @@
+<div class="ip-address">Your IP address: {{ user.ipAddress }}</div>
+<div class="main-container">
+  <mat-progress-bar mode="indeterminate" *ngIf="inProgress"></mat-progress-bar>
+  <div class="form-container" *ngIf="!formSubmited">
+    <form fxLayout="row" #formElement="ngForm">
+      <mat-form-field fxFlex="100%">
+        <mat-label>Text</mat-label>
+        <textarea
+          matInput
+          name="text"
+          cdkTextareaAutosize
+          [(ngModel)]="text"
+          required
+        ></textarea>
+        <button
+          mat-button
+          matSuffix
+          mat-icon-button
+          (click)="text=''"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div *ngIf="sendError" class="request-error">{{ sendError }}</div>
+    </form>
+    <div fxLayout="row" >
+      Number of words to consider in entered text: {{ calculateNumberOfWords() }}
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <button
+        mat-raised-button
+        color="primary"
+        fxFlex="100%"
+        (click)="sendText()"
+        [disabled]="!formElement.valid || inProgress"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+
+  <div fxLayout="column" class="words-list" *ngIf="formSubmited">
+      <div fxLayout="row" fxFlex="100%" fxLayoutAlign="flex-end">
+        <button
+          mat-raised-button
+          color="primary"
+          fxFlex="20%"
+          (click)="restoreForm()"
+        >
+          Submit another text
+        </button>
+      </div>
+      <div fxLayout="row" fxFlex="100%">
+        You submitted text:
+      </div>
+      <div fxLayout="row" class="submitted-text-container" fxFlex="100%">
+        <div class="submitted-text">
+          {{ lastSubmittedText }}
+        </div>
+      </div>
+      <mat-table [dataSource]="dataSource">
+        <!-- No Column -->
+        <ng-container cdkColumnDef="no">
+          <mat-header-cell *matHeaderCellDef> # </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index"> {{i + 1}} </mat-cell>
+        </ng-container>
+
+        <!-- Word Column -->
+        <ng-container cdkColumnDef="word">
+          <mat-header-cell *matHeaderCellDef> Word </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.word}} </mat-cell>
+        </ng-container>
+
+        <!-- Count Column -->
+        <ng-container cdkColumnDef="count">
+          <mat-header-cell *matHeaderCellDef> Count </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.count}} </mat-cell>
+        </ng-container>
+
+        <!-- Stars Column -->
+        <ng-container cdkColumnDef="stars">
+          <mat-header-cell *matHeaderCellDef> Stars </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index">
+            <div *ngIf="i === 0">
+              <mat-icon>star</mat-icon>
+              <mat-icon>star</mat-icon>
+              <mat-icon>star</mat-icon>
+            </div>
+            <div *ngIf="i === 1">
+              <mat-icon>star</mat-icon>
+              <mat-icon>star</mat-icon>
+            </div>
+            <div *ngIf="i === 2">
+              <mat-icon>star</mat-icon>
+            </div>
+            <div *ngIf="i > 2">
+              <mat-icon>horizontal_rule</mat-icon>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </div>
+</div>

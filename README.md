@@ -1,2 +1,2 @@
 # words-caclulator
-Words caclulator - sample demo app
+Words calculator - sample demo app
