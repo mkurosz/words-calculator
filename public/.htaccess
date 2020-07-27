@@ -7,6 +7,9 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    RewriteCond %{REQUEST_URI} ^/$
+    Rewriterule ^(.*)$ /app/index.html [L,R=301]
+
     RewriteRule ^(app) - [L]
 
     # Determine the RewriteBase automatically and set it as environment variable.
